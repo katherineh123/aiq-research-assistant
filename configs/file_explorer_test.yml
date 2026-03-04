@@ -1,0 +1,64 @@
+# =============================================================================
+# Test config: file_explorer_agent only (no hardcoded meeting_grep)
+# Purpose: verify the dynamic grep subagent inspects format and self-configures
+# Requirements: NVIDIA_API_KEY, MEETING_NOTES_DIR
+# =============================================================================
+
+general:
+  telemetry:
+    logging:
+      console:
+        _type: console
+        level: INFO
+
+llms:
+  qwen:
+    _type: openai
+    model_name: qwen/qwen3-next-80b-a3b-instruct
+    base_url: "https://integrate.api.nvidia.com/v1"
+    api_key: ${NVIDIA_API_KEY}
+    temperature: 0.3
+    top_p: 0.9
+    max_tokens: 8192
+
+functions:
+  file_explorer:
+    _type: file_explorer_agent
+    pdf_dir: ${MEETING_NOTES_DIR:-sunnyvale_city_meeting_notes}
+    llm: qwen
+    max_turns: 8
+    verbose: true
+
+  intent_classifier:
+    _type: intent_classifier
+    llm: qwen
+    verbose: true
+    tools:
+      - file_explorer
+
+  shallow_research_agent:
+    _type: shallow_research_agent
+    llm: qwen
+    verbose: true
+    tools:
+      - file_explorer
+    max_llm_turns: 5
+    max_tool_iterations: 3
+
+  deep_research_agent:
+    _type: deep_research_agent
+    orchestrator_llm: qwen
+    researcher_llm: qwen
+    planner_llm: qwen
+    max_loops: 1
+    verbose: true
+    tools:
+      - file_explorer
+
+workflow:
+  _type: chat_deepresearcher_agent
+  verbose: true
+  enable_escalation: true
+  enable_clarifier: false
+  use_async_deep_research: false
+  checkpoint_db: ":memory:"
