@@ -367,6 +367,14 @@ def _parse_knowledge_layer(content: str, tool_name: str) -> list[SourceEntry]:
 # All other tools (Tavily, paper search, etc.) use the generic URL fallback.
 register_source_parser(lambda name: "knowledge" in name, _parse_knowledge_layer)
 
+# Register file_explorer as a known source type.
+# Its output is plain text (no URLs), so we create a synthetic entry to keep
+# the shallow researcher's source registry non-empty and avoid EmptySourceRegistryError.
+register_source_parser(
+    lambda name: "file_explorer" in name or "explore_files" in name,
+    lambda content, tool_name: [SourceEntry(citation_key=tool_name, source_type="file_explorer", tool_name=tool_name)],
+)
+
 # ---------------------------------------------------------------------------
 # Citation verification
 # ---------------------------------------------------------------------------
