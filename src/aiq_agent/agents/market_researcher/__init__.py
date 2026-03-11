@@ -13,23 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Intent classification result model."""
+"""Market researcher agent for competitive analysis and market intelligence."""
 
-from typing import Any
-from typing import Literal
+from .register import market_research_agent
 
-from pydantic import BaseModel
-
-
-class IntentResult(BaseModel):
-    """
-    Result of intent classification.
-
-    Attributes:
-        intent: Classified intent - either 'meta' (greetings, chit-chat, capabilities)
-                or 'research' (queries requiring data lookup and sources).
-        raw: Optional raw classification response from the LLM.
-    """
-
-    intent: Literal["meta", "research", "market_research"]
-    raw: dict[str, Any] | None = None
+__all__ = ["market_research_agent"]

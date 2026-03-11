@@ -133,7 +133,7 @@ class IntentClassifier:
                 }
 
             raw_intent = (parsed.get("intent") or "research").strip().lower()
-            intent = raw_intent if raw_intent in ("meta", "research") else "research"
+            intent = raw_intent if raw_intent in ("meta", "research", "market_research") else "research"
             meta_response = parsed.get("meta_response")
             research_depth = (parsed.get("research_depth") or "shallow").strip().lower()
             depth_reasoning = parsed.get("depth_reasoning") or ""
@@ -147,6 +147,9 @@ class IntentClassifier:
                     meta_response if isinstance(meta_response, str) and meta_response.strip() else "I'm here to help."
                 )
                 update["messages"] = [AIMessage(content=meta_text)]
+            elif intent == "market_research":
+                # market_research bypasses depth routing — goes directly to market_research_node
+                pass
             else:
                 update["depth_decision"] = DepthDecision(
                     decision=research_depth if research_depth in ("shallow", "deep") else "shallow",

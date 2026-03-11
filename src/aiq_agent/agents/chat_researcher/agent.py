@@ -42,6 +42,7 @@ from langgraph.types import Command
 from aiq_agent.agents.clarifier.models import ClarifierAgentState
 from aiq_agent.agents.clarifier.models import ClarifierResult
 from aiq_agent.agents.deep_researcher.models import DeepResearchAgentState
+from aiq_agent.agents.market_researcher.models import MarketResearchAgentState
 from aiq_agent.agents.shallow_researcher.models import ShallowResearchAgentState
 from aiq_agent.common import get_latest_user_query
 from aiq_agent.common.citation_verification import EmptySourceRegistryError
@@ -78,6 +79,7 @@ class ChatResearcherAgent:
         ]
         | None,
         *,
+        market_research_fn: Callable[[str], Awaitable[str]] | None = None,
         enable_clarifier: bool = True,
         enable_escalation: bool = True,
         callbacks: list[BaseCallbackHandler] | None = None,
@@ -105,6 +107,7 @@ class ChatResearcherAgent:
         self.shallow_research_fn = shallow_research_fn
         self.deep_research_fn = deep_research_fn
         self.clarifier_fn = clarifier_fn
+        self.market_research_fn = market_research_fn
         self.enable_clarifier = enable_clarifier
         self.enable_escalation = enable_escalation
         self.callbacks = callbacks or []
@@ -283,10 +286,46 @@ class ChatResearcherAgent:
             else:
                 return {"messages": [result.messages[-1]]}
 
+        async def market_research_node(state: ChatResearcherState) -> dict[str, Any]:
+            if self.market_research_fn is None:
+                logger.warning("market_research intent received but market_research_fn is not configured; "
+                               "falling back to shallow research")
+                return await shallow_research_node(state)
+
+            trimmed_messages: list[BaseMessage] = trim_message_history(state.messages, self.max_history)
+            market_state = MarketResearchAgentState(
+                messages=trimmed_messages,
+                data_sources=state.data_sources,
+                available_documents=state.available_documents,
+            )
+            try:
+                result = await self.market_research_fn(market_state)
+            except Exception as e:
+                logger.exception("Error in market research: %s", e)
+                err_msg = "An error occurred during market research. Please try again."
+                return {"messages": [AIMessage(content=err_msg)]}
+
+            if not result.messages:
+                logger.error("Market research agent returned no messages")
+                return {"messages": [AIMessage(content="An error occurred during market research.")]}
+
+            new_messages = result.messages[len(trimmed_messages):]
+            final_ai_message = next(
+                (m for m in reversed(new_messages) if isinstance(m, AIMessage) and not m.tool_calls),
+                None,
+            )
+            if final_ai_message:
+                return {"messages": [final_ai_message]}
+            if new_messages:
+                return {"messages": [new_messages[-1]]}
+            return {"messages": []}
+
         def route_after_orchestration(state: ChatResearcherState) -> str:
             """From combined orchestration: meta -> END (response already in messages), else by depth."""
             if state.user_intent and state.user_intent.intent == "meta":
                 return "END"
+            if state.user_intent and state.user_intent.intent == "market_research":
+                return "market_research"
             if state.depth_decision and state.depth_decision.decision == "deep":
                 return "clarifier"
             return "shallow_research"
@@ -332,6 +371,7 @@ class ChatResearcherAgent:
         graph.add_node("shallow_research", shallow_research_node)
         graph.add_node("clarifier", clarifier_node)
         graph.add_node("deep_research", deep_research_node)
+        graph.add_node("market_research", market_research_node)
 
         graph.set_entry_point("intent_classifier")
 
@@ -342,8 +382,11 @@ class ChatResearcherAgent:
                 "END": END,
                 "clarifier": "clarifier",
                 "shallow_research": "shallow_research",
+                "market_research": "market_research",
             },
         )
+
+        graph.add_edge("market_research", END)
 
         graph.add_conditional_edges(
             "shallow_research",

@@ -110,6 +110,10 @@ class ChatDeepResearcherConfig(FunctionBaseConfig, name="chat_deepresearcher_age
     )
     verbose: bool = Field(default=False, description="Enable verbose logging")
     enable_clarifier: bool = Field(default=False, description="Enable clarification of research queries")
+    enable_market_research: bool = Field(
+        default=False,
+        description="Enable market research routing for competitive analysis and market intelligence queries",
+    )
     use_async_deep_research: bool = Field(
         default=False,
         description="Submit deep research as an async job instead of running inline",
@@ -187,6 +191,7 @@ async def chat_deepresearcher_agent(config: ChatDeepResearcherConfig, builder: B
     shallow_research_fn = await builder.get_function("shallow_research_agent")
     deep_research_fn = await builder.get_function("deep_research_agent")
     clarifier_fn = await builder.get_function("clarifier_agent") if config.enable_clarifier else None
+    market_research_fn = await builder.get_function("market_research_agent") if config.enable_market_research else None
 
     # Get deep research tools for early validation
     deep_research_config = builder.get_function_config("deep_research_agent")
@@ -274,6 +279,7 @@ async def chat_deepresearcher_agent(config: ChatDeepResearcherConfig, builder: B
         shallow_research_fn=shallow_research_fn.ainvoke,
         deep_research_fn=deep_research_fn.ainvoke,
         clarifier_fn=clarifier_fn.ainvoke if clarifier_fn else None,
+        market_research_fn=market_research_fn.ainvoke if market_research_fn else None,
         enable_clarifier=config.enable_clarifier,
         enable_escalation=config.enable_escalation,
         callbacks=callbacks,
