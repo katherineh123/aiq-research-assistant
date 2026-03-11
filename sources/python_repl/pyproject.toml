@@ -1,0 +1,24 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools >= 64", "setuptools-scm>=8"]
+
+[tool.setuptools]
+packages = ["python_repl"]
+package-dir = {"python_repl" = "src"}
+
+[project]
+name = "python-repl"
+version = "1.0.0"
+description = "NAT-based Python REPL tool for data analysis and computation"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = {text = "Apache-2.0"}
+dependencies = [
+    "nvidia-nat==1.4.0",
+    "pydantic>=2.0.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+]
+
+[project.entry-points."nat.plugins"]
+python_repl = "python_repl.register"

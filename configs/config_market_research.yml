@@ -144,6 +144,13 @@ functions:
       - advanced_web_search_tool
       - knowledge_search
 
+  python_repl_tool:
+    _type: python_repl
+    data_dir: ./equity-research/data
+    output_dir: ./equity-research/outputs/claude
+    timeout: 30.0
+    max_output_chars: 8000
+
   market_research_agent:
     _type: market_research_agent
     llm: gpt_oss_llm
@@ -151,6 +158,7 @@ functions:
     tools:
       - web_search_tool
       - knowledge_search
+      - python_repl_tool
     max_llm_turns: 10
     max_tool_iterations: 8
 

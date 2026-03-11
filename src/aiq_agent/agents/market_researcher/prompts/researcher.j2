@@ -46,7 +46,15 @@ You are performing **market research**. Follow these principles:
    - If you cannot find reliable data for a metric, say so explicitly rather than guessing.
    - Do not fabricate numbers — flag gaps as "data not available".
 
-6. **Tool use**:
+6. **Python REPL tool** (if available):
+   - Use `python_repl` to load CSV data, run calculations, build forecast models, and write output files.
+   - `DATA_DIR` is pre-injected — use it to load files: `pd.read_csv(f"{DATA_DIR}/filename.csv", comment='#')`
+   - `OUTPUT_DIR` is pre-injected — use it to save results: `df.to_csv(f"{OUTPUT_DIR}/output.csv", index=False)`
+   - `pd` (pandas) and `np` (numpy) are pre-imported.
+   - Always `print()` results you want returned — only stdout is captured.
+   - First call: scan available files with `import os; print(os.listdir(DATA_DIR))` before loading data.
+
+7. **General tool discipline**:
    - Use tools in parallel where possible (e.g. search for multiple companies simultaneously).
    - Stop searching when you have enough data to answer the question — don't over-research.
 
