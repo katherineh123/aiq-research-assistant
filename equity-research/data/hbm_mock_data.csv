@@ -1,0 +1,20 @@
+# market: High Bandwidth Memory (HBM) | companies: Micron, SK Hynix, Samsung | segment: semiconductor memory
+company,year,hbm_market_share_pct,hbm_production_capacity_kwafers,hbm_capex_usd_bn,notes
+SK Hynix,2019,50,42,1.5,HBM2 dominant supplier
+SK Hynix,2020,52,48,1.8,HBM2E ramp
+SK Hynix,2021,50,58,2.5,HBM2E volume
+SK Hynix,2022,53,72,3.2,HBM3 early production
+SK Hynix,2023,55,95,5.0,HBM3E sole NVIDIA supplier H100
+SK Hynix,2024,53,128,7.5,HBM3E primary NVIDIA supplier B200
+Samsung,2019,45,36,1.2,HBM2 #2 supplier
+Samsung,2020,43,40,1.5,HBM2E ramp slower than SK
+Samsung,2021,44,50,2.0,HBM2E volume
+Samsung,2022,40,60,2.8,HBM3 yield issues begin
+Samsung,2023,35,70,3.5,HBM3E NVIDIA qualification failed
+Samsung,2024,33,78,4.5,HBM3E qualification partial recovery
+Micron,2019,5,5,0.2,HBM2 minor player
+Micron,2020,5,6,0.3,Limited HBM investment
+Micron,2021,6,8,0.5,HBM2E small volumes
+Micron,2022,7,12,0.8,HBM3 ramp begins
+Micron,2023,10,22,1.5,HBM3E qualification at NVIDIA starts
+Micron,2024,14,32,3.0,HBM3E qualified at NVIDIA shipping

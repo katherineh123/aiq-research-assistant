@@ -1,0 +1,26 @@
+# market: Online Advertising | companies: Google, Meta, Amazon, Microsoft | segment: digital advertising
+company,year,ad_market_share_pct,digital_ad_revenue_usd_bn,monthly_active_users_bn,platform_investment_usd_bn,notes
+Google,2019,31,116.2,2.0,23.5,Search + YouTube dominant
+Google,2020,29,146.9,2.1,22.9,COVID dip then recovery
+Google,2021,29,209.5,2.2,24.8,Strong rebound year
+Google,2022,28,224.5,2.2,31.5,Macro slowdown + competition
+Google,2023,27,237.9,2.3,32.3,AI search threats emerging
+Google,2024,26,264.6,2.4,36.0,Share erosion from Amazon/TikTok
+Meta,2019,20,69.7,3.0,13.6,Facebook + Instagram combined
+Meta,2020,21,86.0,3.3,15.9,COVID drove SMB ad spend online
+Meta,2021,22,114.9,3.6,18.6,Peak pre-iOS share
+Meta,2022,19,113.6,3.7,32.0,iOS 14.5 privacy hit crushed targeting
+Meta,2023,20,131.9,4.0,28.1,Recovery via AI-driven ad tools
+Meta,2024,21,156.4,4.3,35.0,Reels monetization + Advantage+ AI
+Amazon,2019,8,14.1,0.3,9.2,Sponsored Products core product
+Amazon,2020,10,19.8,0.4,11.0,Pandemic ecommerce surge
+Amazon,2021,11,31.2,0.5,14.0,DSP and streaming ads ramp
+Amazon,2022,12,37.7,0.6,18.0,Retail media becoming category
+Amazon,2023,13,46.9,0.7,20.4,Prime Video ads launch
+Amazon,2024,14,56.2,0.8,22.0,Fastest growing of the three
+Microsoft,2019,4,7.7,0.3,6.6,LinkedIn + Bing search
+Microsoft,2020,4,8.5,0.3,7.3,LinkedIn resilient through COVID
+Microsoft,2021,4,10.0,0.4,8.1,LinkedIn premium and B2B growth
+Microsoft,2022,4,11.6,0.4,9.5,Activision deal year
+Microsoft,2023,4,12.2,0.5,11.0,Bing AI integration (ChatGPT)
+Microsoft,2024,4,13.5,0.5,14.0,Copilot ads + LinkedIn growth
